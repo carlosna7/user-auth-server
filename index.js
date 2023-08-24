@@ -18,7 +18,7 @@ const db = mysql.createConnection({
 app.use(express.json())
 app.use(cors(
     {
-        origin:["http://localhost:3000"],
+        origin:["https://user-auth-gamma-three.vercel.app"],
         methods: ["POST", "GET"],
         credentials: true
     }
@@ -46,7 +46,7 @@ app.post("/login", async (req, res) => {
                 const token = jwt.sign({email}, "secret-key", { expiresIn: "1h" });
                 console.log(token)
 
-                res.cookie("token", token, { httpOnly: true, secure: false })
+                res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "none" })
 
                 res.send({ success: true, msg: "Login bem-sucedido" })
             } else {
