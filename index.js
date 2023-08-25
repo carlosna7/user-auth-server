@@ -45,8 +45,7 @@ app.post("/login", async (req, res) => {
             const response = await bcrypt.compare(password, hashPassword);
 
             if (response) {
-                const token = jwt.sign({email}, "secret-key", { expiresIn: "1h" });
-                console.log(token)
+                const token = jwt.sign({email}, "secret-key-secret", { expiresIn: "1h" });
 
                 res.cookie("token", token, { httpOnly: true, secure: false })
 
@@ -85,14 +84,15 @@ app.post("/register", async (req, res) => {
 
 app.get("/homelogged", (req, res) => {
     const token = req.cookies.token;
-  
+    console.log("token", token)
+
     if (!token) {
         return res.status(401).json({ msg: "Unauthorized" });
     }
   
     try {
-        const decodedToken = jwt.verify(token, "secret-key");
-        // Proceed with handling the authorized request
+        const decodedToken = jwt.verify(token, "secret-key-secret");
+        console.log(decodedToken)
   
         res.send({ msg: "Welcome to the logged-in page!" });
     } catch (err) {
