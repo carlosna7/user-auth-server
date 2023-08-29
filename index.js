@@ -37,7 +37,7 @@ app.post("/login", async (req, res) => {
     const password = req.body.password;
 
     try {
-        const [result] = await db.promise().query("SELECT * FROM usuarios WHERE email = ?", [email]);
+        const [result] = await db.promise().query("SELECT * FROM banco.usuarios WHERE email = ?", [email]);
 
         if (result.length > 0) {
 
@@ -67,12 +67,12 @@ app.post("/register", async (req, res) => {
     const {email, password} = req.body;
 
     try {
-        const [existUser] = await db.promise().query("SELECT * FROM usuarios WHERE email=?", [email]);
+        const [existUser] = await db.promise().query("SELECT * FROM banco.usuarios WHERE email=?", [email]);
 
         if (existUser.length === 0) {
             const hash = await bcrypt.hash(password, saltRounds);
 
-            await db.promise().query("INSERT INTO usuarios (email, password) VALUES (?, ?)", [email, hash])
+            await db.promise().query("INSERT INTO banco.usuarios (email, password) VALUES (?, ?)", [email, hash])
             res.send({ msg: "Usuário cadastrado com sucesso!" })
         } else {
             res.send({msg: "Email já cadastrado!"})
@@ -100,6 +100,6 @@ app.post("/homelogged", (req, res) => {
     }
 });
 
-app.listen(80, () => {
+app.listen(3306, () => {
 	console.log("Rodando na porta 3306")
 })
