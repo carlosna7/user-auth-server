@@ -82,7 +82,7 @@ app.post("/register", async (req, res) => {
     }
 })
 
-app.get("/homelogged", (req, res) => {
+app.post("/homelogged", (req, res) => {
     const token = req.cookies.token;
     console.log("token", token)
 
