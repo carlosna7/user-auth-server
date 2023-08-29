@@ -100,6 +100,6 @@ app.post("/homelogged", (req, res) => {
     }
 });
 
-app.listen(3306, () => {
-	console.log("Rodando na porta 3306")
+app.listen(443, () => {
+	console.log("Rodando na porta 443")
 })
