@@ -9,10 +9,10 @@ const cookieParser = require("cookie-parser");
 const saltRounds = 10;
 
 const db = mysql.createConnection({
-	host: "localhost",
-	user: "root",
-	password: "senha1234",
-	database: "banco",
+	host: "bekvctid9hnn8ojg3dub-mysql.services.clever-cloud.com",
+	user: "ubtmexty1xdhaf9h",
+	password: "9UacvAocI96ynbYne7Ls",
+	database: "bekvctid9hnn8ojg3dub",
 });
 
 app.use(express.json())
