@@ -100,6 +100,6 @@ app.post("/homelogged", (req, res) => {
     }
 });
 
-app.listen(3001, () => {
-	console.log("Rodando na porta 3001")
+app.listen(80, () => {
+	console.log("Rodando na porta 80")
 })
