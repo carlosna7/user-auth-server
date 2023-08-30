@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 
 const saltRounds = 10;
+const secret = "secret-key"
 
 const db = mysql.createConnection({
 	host: "bekvctid9hnn8ojg3dub-mysql.services.clever-cloud.com",
@@ -20,7 +21,7 @@ app.use(cors(
     {
         // https://user-auth-client-carlosna7.vercel.app
         // http://localhost:3000
-        origin:"https://user-auth-client-carlosna7.vercel.app",
+        origin:"http://localhost:3000",
         methods: ["POST", "GET"],
         credentials: true
     }
@@ -45,9 +46,9 @@ app.post("/login", async (req, res) => {
             const response = await bcrypt.compare(password, hashPassword);
 
             if (response) {
-                const token = jwt.sign({email}, "secret-key-secret", { expiresIn: "1h" });
+                const token = jwt.sign({email}, secret, { expiresIn: "1h" });
 
-                res.cookie("token", token, { httpOnly: true, secure: true, sameSite: 'none' })
+                res.cookie("token", token)
 
                 res.send({ success: true, msg: "Login bem-sucedido" })
             } else {
@@ -91,8 +92,10 @@ app.post("/homelogged", (req, res) => {
     }
   
     try {
-        const decodedToken = jwt.verify(token, "secret-key-secret");
-        console.log(decodedToken)
+      const decodedToken = jwt.decode(token);
+      console.log(decodedToken)
+      const verificar = jwt.verify(token, secret);
+      console.log(verificar)
   
         res.send({ msg: "Welcome to the logged-in page!" });
     } catch (err) {
@@ -100,6 +103,6 @@ app.post("/homelogged", (req, res) => {
     }
 });
 
-app.listen(3306, () => {
+app.listen(3001, () => {
 	console.log("Rodando na porta 80")
 })
