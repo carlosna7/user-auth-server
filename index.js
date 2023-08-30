@@ -47,7 +47,7 @@ app.post("/login", async (req, res) => {
             if (response) {
                 const token = jwt.sign({email}, "secret-key-secret", { expiresIn: "1h" });
 
-                res.cookie("token", token, { httpOnly: true, secure: false })
+                res.cookie("token", token, { httpOnly: true, secure: true })
 
                 res.send({ success: true, msg: "Login bem-sucedido" })
             } else {
