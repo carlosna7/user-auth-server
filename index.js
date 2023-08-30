@@ -92,8 +92,6 @@ app.post("/homelogged", (req, res) => {
     }
   
     try {
-      const decodedToken = jwt.decode(token);
-      console.log(decodedToken)
       const verificar = jwt.verify(token, secret);
       console.log(verificar)
   
