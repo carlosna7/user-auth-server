@@ -37,7 +37,7 @@ app.post("/login", async (req, res) => {
     const password = req.body.password;
 
     try {
-        const [result] = await db.promise().query("SELECT * FROM banco.usuarios WHERE email = ?", [email]);
+        const [result] = await db.promise().query("SELECT * FROM usuarios WHERE email = ?", [email]);
 
         if (result.length > 0) {
 
@@ -67,7 +67,7 @@ app.post("/register", async (req, res) => {
     const {email, password} = req.body;
 
     try {
-        const [existUser] = await db.promise().query("SELECT * FROM banco.usuarios WHERE email=?", [email]);
+        const [existUser] = await db.promise().query("SELECT * FROM usuarios WHERE email=?", [email]);
 
         if (existUser.length === 0) {
             const hash = await bcrypt.hash(password, saltRounds);
