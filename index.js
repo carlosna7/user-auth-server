@@ -82,43 +82,23 @@ app.post("/register", async (req, res) => {
     }
 })
 
-// app.post("/homelogged", (req, res) => {
-//     const token = req.cookies.token;
-//     console.log("token", token)
-
-//     if (!token) {
-//         return res.status(401).json({ msg: "Unauthorized" });
-//     }
-  
-//     try {
-//         const decodedToken = jwt.verify(token, "secret-key-secret");
-//         console.log(decodedToken)
-  
-//         res.send({ msg: "Welcome to the logged-in page!" });
-//     } catch (err) {
-//         res.status(401).json({ msg: "Invalid token" });
-//     }
-// });
-
-const authenticateToken = (req, res, next) => {
+app.post("/homelogged", (req, res) => {
     const token = req.cookies.token;
+    console.log("token", token)
+
     if (!token) {
-      return res.status(401).json({ success: false, error: "Unauthorized" });
+        return res.status(401).json({ msg: "Unauthorized" });
     }
   
     try {
-      const decodedToken = jwt.verify(token, "secret-key-secret");
-      req.user = decodedToken; 
-      next();
+        const decodedToken = jwt.verify(token, "secret-key-secret");
+        console.log(decodedToken)
+  
+        res.send({ msg: "Welcome to the logged-in page!" });
     } catch (err) {
-      res.status(401).json({ success: false, error: "Invalid token" });
+        res.status(401).json({ msg: "Invalid token" });
     }
-  };
-  
-  app.post("/homelogged", authenticateToken, (req, res) => {
-    res.send({ success: true, msg: "Welcome to the logged-in page!" });
-  });
-  
+});
 
 app.listen(3306, () => {
 	console.log("Rodando na porta 80")
