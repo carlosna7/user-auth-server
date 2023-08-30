@@ -72,7 +72,7 @@ app.post("/register", async (req, res) => {
         if (existUser.length === 0) {
             const hash = await bcrypt.hash(password, saltRounds);
 
-            await db.promise().query("INSERT INTO banco.usuarios (email, password) VALUES (?, ?)", [email, hash])
+            await db.promise().query("INSERT INTO usuarios (email, password) VALUES (?, ?)", [email, hash])
             res.send({ msg: "Usuário cadastrado com sucesso!" })
         } else {
             res.send({msg: "Email já cadastrado!"})
