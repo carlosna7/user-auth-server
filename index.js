@@ -10,10 +10,10 @@ const saltRounds = 10;
 const secret = "secret-key"
 
 const db = mysql.createConnection({
-	host: "bekvctid9hnn8ojg3dub-mysql.services.clever-cloud.com",
-	user: "ubtmexty1xdhaf9h",
-	password: "9UacvAocI96ynbYne7Ls",
-	database: "bekvctid9hnn8ojg3dub",
+	host: "localhost",
+	user: "root",
+	password: "senha1234",
+	database: "banco",
 });
 
 app.use(express.json())
@@ -21,7 +21,7 @@ app.use(cors(
     {
         // https://user-auth-client-carlosna7.vercel.app
         // http://localhost:3000
-        origin:"https://user-auth-client-carlosna7.vercel.app",
+        origin:"http://localhost:3000",
         methods: ["POST", "GET"],
         credentials: true
     }
@@ -101,6 +101,6 @@ app.post("/homelogged", (req, res) => {
     }
 });
 
-app.listen(3306, () => {
-	console.log("Rodando na porta 3306")
+app.listen(3001, () => {
+	console.log("Rodando na porta 3001")
 })
