@@ -83,24 +83,28 @@ app.post("/register", async (req, res) => {
     }
 })
 
-console.log("Antes da verificação do token 111");
-
 app.post("/homelogged", (req, res) => {
-    console.log("Antes da verificação do token 222");
     const token = req.cookies.token;
-    console.log(token);
+    const email = req.body.email;
 
     if (!token) {
-        return res.status(401).json({ msg: "Unauthorized" });
+        return res.status(401).json({ msg: "Token não informado." })
     }
   
     try {
         const verificar = jwt.verify(token, secret);
-        console.log("teste2")
-  
-        res.send({ msg: "Welcome to the logged-in page!" });
+        if("teste2@gmail.com" !== verificar.email) {
+            console.log("email incompative")
+            res.clearCookie("token")
+
+            res.redirect("/")
+        } else {
+            console.log("certo!")
+            res.send({ msg: "Você está Logado!" })
+        }
+
     } catch (err) {
-        res.status(401).json({ msg: "Invalid token" });
+        res.status(401).json({ msg: "Invalid token" })
     }
 })
 
