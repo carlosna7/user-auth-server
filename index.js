@@ -21,7 +21,7 @@ app.use(cors(
     {
         // https://user-auth-client-carlosna7.vercel.app
         // http://localhost:3000
-        origin:"http://localhost:3000",
+        origin:"https://user-auth-client-carlosna7.vercel.app",
         methods: ["POST", "GET"],
         credentials: true
     }
@@ -93,11 +93,11 @@ app.post("/homelogged", (req, res) => {
   
     try {
         const verificar = jwt.verify(token, secret);
-        if("teste2@gmail.com" !== verificar.email) {
+        if(email !== verificar.email) {
             console.log("email incompative")
             res.clearCookie("token")
 
-            res.redirect("/")
+            return res.redirect("/")
         } else {
             console.log("certo!")
             res.send({ msg: "Você está Logado!" })
