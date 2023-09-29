@@ -10,7 +10,7 @@ const saltRounds = 10;
 const secret = "secret-key"
 
 const db = mysql.createConnection({
-	host: "",
+	host: "localhost",
 	user: "root",
 	password: "senha1234",
 	database: "banco",
@@ -21,7 +21,7 @@ app.use(cors(
     {
         // https://user-auth-client-carlosna7.vercel.app
         // http://localhost:3000
-        origin:"https://user-auth-client-carlosna7.vercel.app",
+        origin:"http://localhost:3000",
         methods: ["POST", "GET"],
         credentials: true
     }
@@ -62,7 +62,7 @@ app.post("/login", async (req, res) => {
     } catch (err) {
         errorHandler(res, "Erro ao fazer login", err)
     }
-});
+})
 
 app.post("/register", async (req, res) => {
     const {email, password} = req.body;
@@ -83,23 +83,26 @@ app.post("/register", async (req, res) => {
     }
 })
 
+console.log("Antes da verificação do token 111");
+
 app.post("/homelogged", (req, res) => {
+    console.log("Antes da verificação do token 222");
     const token = req.cookies.token;
-    console.log("token", token)
+    console.log(token);
 
     if (!token) {
         return res.status(401).json({ msg: "Unauthorized" });
     }
   
     try {
-      const verificar = jwt.verify(token, secret);
-      console.log(verificar)
+        const verificar = jwt.verify(token, secret);
+        console.log("teste2")
   
         res.send({ msg: "Welcome to the logged-in page!" });
     } catch (err) {
         res.status(401).json({ msg: "Invalid token" });
     }
-});
+})
 
 app.listen(3001, () => {
 	console.log("Rodando na porta 3001")
