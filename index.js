@@ -16,17 +16,17 @@ const db = mysql.createConnection({
 	database: "banco",
 })
 
+app.use(cookieParser())
 app.use(express.json())
 app.use(cors(
     {
         // https://user-auth-client-carlosna7.vercel.app
         // http://localhost:3000
         origin:"https://user-auth-client-carlosna7.vercel.app",
-        methods: ["POST", "GET"],
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true
     }
 ))
-app.use(cookieParser())
 
 function errorHandler(res, msg, status = 500) {
     console.error(msg)
