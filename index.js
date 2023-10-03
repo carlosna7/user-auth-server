@@ -18,15 +18,14 @@ const db = mysql.createConnection({
 
 app.use(cookieParser())
 app.use(express.json())
-app.use(cors(
-    {
-        // https://user-auth-client-carlosna7.vercel.app
-        // http://localhost:3000
-        origin:"https://user-auth-client-carlosna7.vercel.app",
-        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-        credentials: true
-    }
-))
+app.use(cors({
+    // https://user-auth-client-carlosna7.vercel.app
+    // http://localhost:3000
+    origin:"https://user-auth-client-carlosna7.vercel.app",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    secure: true,
+}))
 
 function errorHandler(res, msg, status = 500) {
     console.error(msg)
@@ -48,7 +47,12 @@ app.post("/login", async (req, res) => {
             if (response) {
                 const token = jwt.sign({email}, secret, { expiresIn: "1h" });
 
-                res.cookie("token", token)
+                // res.cookie("token", token)
+                res.cookie("token", token, {
+                    secure: true, // Configura o cookie para HTTPS apenas
+                    httpOnly: true,
+                    sameSite: "None",
+                });
 
                 res.send({ success: true, msg: "Login bem-sucedido" })
             } else {
