@@ -21,7 +21,7 @@ app.use(express.json())
 app.use(cors({
     // https://user-auth-client-carlosna7.vercel.app
     // http://localhost:3000
-    origin:"https://user-auth-client-carlosna7.vercel.app",
+    origin:"http://localhost:3000",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     secure: true,
@@ -98,7 +98,6 @@ app.post("/homelogged", (req, res) => {
     try {
         const verificar = jwt.verify(token, secret);
         if(email !== verificar.email) {
-            console.log("email incompative")
             res.clearCookie("token")
 
             return res.redirect("/")
@@ -112,6 +111,6 @@ app.post("/homelogged", (req, res) => {
     }
 })
 
-app.listen(80, () => {
-	console.log("Rodando na porta 80")
+app.listen(3001, () => {
+	console.log("Rodando na porta 3001")
 })
