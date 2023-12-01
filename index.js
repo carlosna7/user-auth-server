@@ -4,6 +4,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+
 const cookieParser = require("cookie-parser");
 
 const saltRounds = 10;
@@ -47,8 +48,8 @@ app.post("/login", async (req, res) => {
             if (response) {
                 const token = jwt.sign({email}, secret, { expiresIn: "1h" });
 
-                // res.cookie("token", token)
-                res.cookie("token", token, {
+                // res.cookie("token", token)              
+                res.cookie("tokenToken", token, {
                     secure: true, // Configura o cookie para HTTPS apenas
                     httpOnly: true,
                     sameSite: "None",
