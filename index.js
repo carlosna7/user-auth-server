@@ -4,7 +4,6 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-
 const cookieParser = require("cookie-parser");
 
 const saltRounds = 10;
@@ -33,6 +32,27 @@ function errorHandler(res, msg, status = 500) {
     res.status(status).json({ msg: "Erro no servidor" })
 }
 
+const verifyUser = (req, res, next) => {
+    const token = req.cookies.tokenLogin
+
+    if(!token) {
+		res.send({ success: false, msg: "Usuário não autenticado!"})
+    } else {
+        jwt.verify(token, secret, (err, decoded) => {
+            if(err) {
+                res.send({ success: false, msg: "Token não autenticado!"})
+            } else {
+                req.email = decoded.email
+                next()
+            }
+        })
+    }
+}
+
+app.get("/virifyuser", verifyUser, (req, res) => {
+    return res.json({ success: true, msg: "Token autenticado" });
+})
+
 app.post("/login", async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -49,7 +69,7 @@ app.post("/login", async (req, res) => {
                 const token = jwt.sign({email}, secret, { expiresIn: "1h" });
 
                 // res.cookie("token", token)              
-                res.cookie("tokenToken", token, {
+                res.cookie("tokenLogin", token, {
                     secure: true, // Configura o cookie para HTTPS apenas
                     httpOnly: true,
                     sameSite: "None",
