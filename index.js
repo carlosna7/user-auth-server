@@ -34,6 +34,8 @@ function errorHandler(res, msg, status = 500) {
 
 const verifyUser = (req, res, next) => {
     const token = req.cookies.tokenLogin
+    
+    console.log(token)
 
     if(!token) {
 		res.send({ success: false, msg: "Usuário não autenticado!"})
@@ -49,7 +51,7 @@ const verifyUser = (req, res, next) => {
     }
 }
 
-app.get("/virifyuser", verifyUser, (req, res) => {
+app.get("/verifyuser", verifyUser, (req, res) => {
     return res.json({ success: true, msg: "Token autenticado" });
 })
 
