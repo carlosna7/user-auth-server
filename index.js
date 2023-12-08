@@ -32,24 +32,64 @@ function errorHandler(res, msg, status = 500) {
     res.status(status).json({ msg: "Erro no servidor" })
 }
 
-const verifyUser = (req, res, next) => {
-    const token = req.cookies.tokenLogin
+const verifyUser =  (req, res, next) => {
+    const token =  req.cookies.tokenLogin
+    const token2 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlMUBnbWFpbC5jb20iLCJpYXQiOjE3MDIwNDEyNTcsImV4cCI6MTcwMjA0NDg1N30.hOyzKdfIlUdoP0a5OAfz9I84_0L5hn0uJJMhcFyGfhA"
     
-    console.log(token)
+    console.log(token2)
 
-    if(!token) {
+    if(!token2) {
+        console.log("falhou viado")
 		res.send({ success: false, msg: "Usuário não autenticado!"})
+        
     } else {
-        jwt.verify(token, secret, (err, decoded) => {
+        jwt.verify(token2, secret, (err, decoded) => {
             if(err) {
                 res.send({ success: false, msg: "Token não autenticado!"})
+                res.clearCookie("tokenLogin")
+                
             } else {
+                console.log("certo!")
+                res.send({ msg: "Você está Logado!" })
                 req.email = decoded.email
                 next()
             }
         })
     }
 }
+
+// const verifyUser = (req, res, next) => {
+//     const token = req.cookies.tokenLogin
+//     const email = req.body.email
+
+//     console.log("testeAuth")
+
+//     if(!token) {
+//         return res.status(401).json({ msg: "Token não informado." })
+//     }
+  
+//     try {
+//         const verificar = jwt.verify(token, secret)
+
+//         console.log(verificar)
+
+//         if(email !== verificar.email) {
+//             res.clearCookie("token")
+            
+//             console.log("Não autenticado!")
+
+//             // return res.redirect("/")
+//         } else {
+//             console.log("certo!")
+//             res.send({ msg: "Você está Logado!" })
+
+//             next()
+//         }
+
+//     } catch (err) {
+//         res.status(401).json({ msg: "Invalid token" })
+//     }
+// }
 
 app.get("/verifyuser", verifyUser, (req, res) => {
     return res.json({ success: true, msg: "Token autenticado" });
@@ -71,11 +111,8 @@ app.post("/login", async (req, res) => {
                 const token = jwt.sign({email}, secret, { expiresIn: "1h" });
 
                 // res.cookie("token", token)              
-                res.cookie("tokenLogin", token, {
-                    secure: true, // Configura o cookie para HTTPS apenas
-                    httpOnly: true,
-                    sameSite: "None",
-                });
+                res.cookie("tokenLogin", token
+                );
 
                 res.send({ success: true, msg: "Login bem-sucedido" })
             } else {
@@ -110,29 +147,33 @@ app.post("/register", async (req, res) => {
     }
 })
 
-app.post("/homelogged", (req, res) => {
-    const token = req.cookies.token;
-    const email = req.body.email;
+// app.get("/verifyuser", (req, res) => {
+//     const token = req.cookies.tokenLogin;
+//     const email = req.body.email;
 
-    if (!token) {
-        return res.status(401).json({ msg: "Token não informado." })
-    }
+//     console.log("testeAuth")
+
+//     if(!token) {
+//         return res.status(401).json({ msg: "Token não informado." })
+//     }
   
-    try {
-        const verificar = jwt.verify(token, secret);
-        if(email !== verificar.email) {
-            res.clearCookie("token")
+//     try {
+//         const verificar = jwt.verify(token, secret);
+//         if(email !== verificar.email) {
+//             res.clearCookie("token")
+            
+//             console.log("Não autenticado!")
 
-            return res.redirect("/")
-        } else {
-            console.log("certo!")
-            res.send({ msg: "Você está Logado!" })
-        }
+//             // return res.redirect("/")
+//         } else {
+//             console.log("certo!")
+//             res.send({ msg: "Você está Logado!" })
+//         }
 
-    } catch (err) {
-        res.status(401).json({ msg: "Invalid token" })
-    }
-})
+//     } catch (err) {
+//         res.status(401).json({ msg: "Invalid token" })
+//     }
+// })
 
 app.listen(3001, () => {
 	console.log("Rodando na porta 3001")
