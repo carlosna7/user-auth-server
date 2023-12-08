@@ -34,9 +34,7 @@ function errorHandler(res, msg, status = 500) {
 
 const verifyUser =  (req, res, next) => {
     const token =  req.cookies.tokenLogin
-    const token2 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlMUBnbWFpbC5jb20iLCJpYXQiOjE3MDIwNDEyNTcsImV4cCI6MTcwMjA0NDg1N30.hOyzKdfIlUdoP0a5OAfz9I84_0L5hn0uJJMhcFyGfhA"
-    
-    console.log(token2)
+    const token2 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlMUBnbWFpbC5jb20iLCJpYXQiOjE3MDIwNjM1MzIsImV4cCI6MTcwMjA2NzEzMn0.DdmyRPJCEzmBLQoCNwqCVOnuM_xeYXsg1iefgg7_2C8"
 
     if(!token2) {
         console.log("falhou viado")
@@ -108,11 +106,16 @@ app.post("/login", async (req, res) => {
             const response = await bcrypt.compare(password, hashPassword);
 
             if (response) {
-                const token = jwt.sign({email}, secret, { expiresIn: "1h" });
+                const token = jwt.sign({email}, secret, { expiresIn: "1h" })
+
+                console.log(token)
 
                 // res.cookie("token", token)              
-                res.cookie("tokenLogin", token
-                );
+                res.cookie("tokenLogin", token, {
+                    secure: true, // Configura o cookie para HTTPS apenas
+                    httpOnly: true,
+                    sameSite: "None",
+                });
 
                 res.send({ success: true, msg: "Login bem-sucedido" })
             } else {
@@ -147,7 +150,7 @@ app.post("/register", async (req, res) => {
     }
 })
 
-// app.get("/verifyuser", (req, res) => {
+// app.get("/homelogged", (req, res) => {
 //     const token = req.cookies.tokenLogin;
 //     const email = req.body.email;
 
