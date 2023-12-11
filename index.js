@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 
 const saltRounds = 10;
-const secret = "secret-key"
+const secret = "secretkey"
 
 const db = mysql.createConnection({
 	host: "bekvctid9hnn8ojg3dub-mysql.services.clever-cloud.com",
@@ -34,14 +34,13 @@ function errorHandler(res, msg, status = 500) {
 
 const verifyUser =  (req, res, next) => {
     const token =  req.cookies.tokenLogin
-    const token2 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlMUBnbWFpbC5jb20iLCJpYXQiOjE3MDIwNjM1MzIsImV4cCI6MTcwMjA2NzEzMn0.DdmyRPJCEzmBLQoCNwqCVOnuM_xeYXsg1iefgg7_2C8"
 
-    if(!token2) {
+    if(!token) {
         console.log("falhou viado")
 		res.send({ success: false, msg: "Usuário não autenticado!"})
         
     } else {
-        jwt.verify(token2, secret, (err, decoded) => {
+        jwt.verify(token, secret, (err, decoded) => {
             if(err) {
                 res.send({ success: false, msg: "Token não autenticado!"})
                 res.clearCookie("tokenLogin")
@@ -102,20 +101,29 @@ app.post("/login", async (req, res) => {
 
         if (result.length > 0) {
 
-            const hashPassword = result[0].password;
-            const response = await bcrypt.compare(password, hashPassword);
+            const hashPassword = result[0].password
+            const response = await bcrypt.compare(password, hashPassword)
 
             if (response) {
                 const token = jwt.sign({email}, secret, { expiresIn: "1h" })
 
-                console.log(token)
+                const token2 = jwt.sign(email, secret, { expiresIn: "1h" })
 
-                // res.cookie("token", token)              
+                console.log(token)
+                console.log(token2)
+
+                // res.cookie("token", token)
                 res.cookie("tokenLogin", token, {
                     secure: true, // Configura o cookie para HTTPS apenas
                     httpOnly: true,
                     sameSite: "None",
-                });
+                })
+
+                res.cookie("tokenLogin2", token2, {
+                    secure: true, // Configura o cookie para HTTPS apenas
+                    httpOnly: true,
+                    sameSite: "None",
+                })
 
                 res.send({ success: true, msg: "Login bem-sucedido" })
             } else {
