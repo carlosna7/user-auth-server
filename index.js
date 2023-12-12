@@ -34,6 +34,7 @@ function errorHandler(res, msg, status = 500) {
 
 const verifyUser =  (req, res, next) => {
     const token =  req.cookies.tokenLogin
+    console.log(token)
 
     if(!token) {
         console.log("falhou viado")
@@ -99,27 +100,21 @@ app.post("/login", async (req, res) => {
     try {
         const [result] = await db.promise().query("SELECT * FROM usuarios WHERE email = ?", [email]);
 
+        console.log(result) // retorna objeto com idusuarios, name e password
+
         if (result.length > 0) {
 
             const hashPassword = result[0].password
+            const idUser = result[0].idusuarios
             const response = await bcrypt.compare(password, hashPassword)
 
             if (response) {
-                const token = jwt.sign({email}, secret, { expiresIn: "1h" })
-
-                const token2 = jwt.sign(email, secret, { expiresIn: "1h" })
+                const token = jwt.sign({id: idUser, email: email}, secret, { expiresIn: "1h" })
 
                 console.log(token)
-                console.log(token2)
 
                 // res.cookie("token", token)
                 res.cookie("tokenLogin", token, {
-                    secure: true, // Configura o cookie para HTTPS apenas
-                    httpOnly: true,
-                    sameSite: "None",
-                })
-
-                res.cookie("tokenLogin2", token2, {
                     secure: true, // Configura o cookie para HTTPS apenas
                     httpOnly: true,
                     sameSite: "None",
