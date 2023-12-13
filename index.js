@@ -32,8 +32,10 @@ function errorHandler(res, msg, status = 500) {
     res.status(status).json({ msg: "Erro no servidor" })
 }
 
-const verifyUser =  (req, res, next) => {
-    const token =  req.cookies.tokenLogin
+app.post("/verifyuser", (req, res) => {
+    const token =  req.body.token
+    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0ZTFAZ21haWwuY29tIiwiaWF0IjoxNzAyNDc2NzczLCJleHAiOjE3MDI0ODAzNzN9.UUfgVQf9VmnL4bY5MBNMPc7ETjh10f9qcXno89nYEtM"
+
     console.log(token)
 
     if(!token) {
@@ -41,56 +43,21 @@ const verifyUser =  (req, res, next) => {
 		res.send({ success: false, msg: "Usuário não autenticado!"})
         
     } else {
-        jwt.verify(token, secret, (err, decoded) => {
+        jwt.verify(token, secret, function(err, decoded) {
             if(err) {
                 res.send({ success: false, msg: "Token não autenticado!"})
-                res.clearCookie("tokenLogin")
+                // res.clearCookie("tokenLogin")
                 
             } else {
                 console.log("certo!")
-                res.send({ msg: "Você está Logado!" })
-                req.email = decoded.email
-                next()
+                res.send({ success: true, msg: "Você está Logado!" })
+                
+                console.log(decoded)
             }
         })
     }
-}
 
-// const verifyUser = (req, res, next) => {
-//     const token = req.cookies.tokenLogin
-//     const email = req.body.email
-
-//     console.log("testeAuth")
-
-//     if(!token) {
-//         return res.status(401).json({ msg: "Token não informado." })
-//     }
-  
-//     try {
-//         const verificar = jwt.verify(token, secret)
-
-//         console.log(verificar)
-
-//         if(email !== verificar.email) {
-//             res.clearCookie("token")
-            
-//             console.log("Não autenticado!")
-
-//             // return res.redirect("/")
-//         } else {
-//             console.log("certo!")
-//             res.send({ msg: "Você está Logado!" })
-
-//             next()
-//         }
-
-//     } catch (err) {
-//         res.status(401).json({ msg: "Invalid token" })
-//     }
-// }
-
-app.get("/verifyuser", verifyUser, (req, res) => {
-    return res.json({ success: true, msg: "Token autenticado" });
+    // return res.json({ success: true, msg: "Token autenticado" });
 })
 
 app.post("/login", async (req, res) => {
@@ -98,9 +65,7 @@ app.post("/login", async (req, res) => {
     const password = req.body.password;
 
     try {
-        const [result] = await db.promise().query("SELECT * FROM usuarios WHERE email = ?", [email]);
-
-        console.log(result) // retorna objeto com idusuarios, name e password
+        const [result] = await db.promise().query("SELECT * FROM usuarios WHERE email = ?", [email])
 
         if (result.length > 0) {
 
@@ -111,13 +76,11 @@ app.post("/login", async (req, res) => {
             if (response) {
                 const token = jwt.sign({id: idUser, email: email}, secret, { expiresIn: "1h" })
 
-                console.log(token)
-
                 // res.cookie("token", token)
                 res.cookie("tokenLogin", token, {
-                    secure: true, // Configura o cookie para HTTPS apenas
-                    httpOnly: true,
-                    sameSite: "None",
+                    // secure: true, // Configura o cookie para HTTPS apenas
+                    // httpOnly: true,
+                    // sameSite: "None",
                 })
 
                 res.send({ success: true, msg: "Login bem-sucedido" })
@@ -152,34 +115,6 @@ app.post("/register", async (req, res) => {
         errorHandler(res, "Erro ao cadastrar usuário!", err)
     }
 })
-
-// app.get("/homelogged", (req, res) => {
-//     const token = req.cookies.tokenLogin;
-//     const email = req.body.email;
-
-//     console.log("testeAuth")
-
-//     if(!token) {
-//         return res.status(401).json({ msg: "Token não informado." })
-//     }
-  
-//     try {
-//         const verificar = jwt.verify(token, secret);
-//         if(email !== verificar.email) {
-//             res.clearCookie("token")
-            
-//             console.log("Não autenticado!")
-
-//             // return res.redirect("/")
-//         } else {
-//             console.log("certo!")
-//             res.send({ msg: "Você está Logado!" })
-//         }
-
-//     } catch (err) {
-//         res.status(401).json({ msg: "Invalid token" })
-//     }
-// })
 
 app.listen(3001, () => {
 	console.log("Rodando na porta 3001")
