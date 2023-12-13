@@ -34,9 +34,7 @@ function errorHandler(res, msg, status = 500) {
 
 app.post("/verifyuser", (req, res) => {
     const token =  req.body.token
-    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0ZTFAZ21haWwuY29tIiwiaWF0IjoxNzAyNDc2NzczLCJleHAiOjE3MDI0ODAzNzN9.UUfgVQf9VmnL4bY5MBNMPc7ETjh10f9qcXno89nYEtM"
-
-    console.log(token)
+    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0ZTFAZ21haWwuY29tIiwiaWF0IjoxNzAyNDk2MjE1LCJleHAiOjE3MDI0OTk4MTV9.9l0XV70bM46jd4AcE375j3dccxolnJqCsxD7EwSOAOw"
 
     if(!token) {
         console.log("falhou viado")
@@ -45,12 +43,12 @@ app.post("/verifyuser", (req, res) => {
     } else {
         jwt.verify(token, secret, function(err, decoded) {
             if(err) {
+                console.log("Errado!")
                 res.send({ success: false, msg: "Token não autenticado!"})
-                // res.clearCookie("tokenLogin")
                 
             } else {
                 console.log("certo!")
-                res.send({ success: true, msg: "Você está Logado!" })
+                res.send({ success: true, msg: "Você está autenticado!" })
                 
                 console.log(decoded)
             }
