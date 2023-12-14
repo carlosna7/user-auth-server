@@ -78,6 +78,12 @@ app.post("/login", async (req, res) => {
                     sameSite: "None",
                 })
 
+                res.cookie("tokenTest", "token-teste", {
+                    secure: true, // Configura o cookie para HTTPS apenas
+                    httpOnly: true,
+                    sameSite: "None",
+                })
+
                 res.send({ success: true, msg: "Login bem-sucedido" })
             } else {
 				res.send({ success: false, msg: "Email ou senha incorreto!"})
