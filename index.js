@@ -34,7 +34,6 @@ function errorHandler(res, msg, status = 500) {
 
 app.post("/verifyuser", (req, res) => {
     const token =  req.body.token
-    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0ZTFAZ21haWwuY29tIiwiaWF0IjoxNzAyNDk2MjE1LCJleHAiOjE3MDI0OTk4MTV9.9l0XV70bM46jd4AcE375j3dccxolnJqCsxD7EwSOAOw"
 
     if(!token) {
         console.log("falhou viado")
@@ -54,8 +53,6 @@ app.post("/verifyuser", (req, res) => {
             }
         })
     }
-
-    // return res.json({ success: true, msg: "Token autenticado" });
 })
 
 app.post("/login", async (req, res) => {
