@@ -21,7 +21,7 @@ app.use(express.json())
 app.use(cors({
     // https://user-auth-client-carlosna7.vercel.app
     // http://localhost:3000
-    origin:"http://localhost:3000",
+    origin:"https://user-auth-client-carlosna7.vercel.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     secure: true,
