@@ -73,9 +73,9 @@ app.post("/login", async (req, res) => {
 
                 // res.cookie("token", token)
                 res.cookie("tokenLogin", token, {
-                    // secure: true, // Configura o cookie para HTTPS apenas
-                    // httpOnly: true,
-                    // sameSite: "None",
+                    secure: true, // Configura o cookie para HTTPS apenas
+                    httpOnly: true,
+                    sameSite: "None",
                 })
 
                 res.send({ success: true, msg: "Login bem-sucedido" })
